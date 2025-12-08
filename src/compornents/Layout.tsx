@@ -14,12 +14,12 @@ function Layout({ title, children, rightButtons }: LayoutProps) {
   return (
     <div className="min-h-screen flex flex-col w-full">
       {/* ===== ヘッダー ===== */}
-      <header className="w-full flex items-center justify-between px-6 py-4 shadow bg-white relative">
+      <header className="w-full flex items-center justify-between px-6 py-4 bg-white relative">
         {/* 左：ロゴ */}
         <img
           src="/Logo.png"
           alt="Logo"
-          className="w-48 h-24 cursor-pointer flex-shrink-0"
+          className="w-48 h-12 cursor-pointer flex-shrink-0"
           onClick={goHome}
         />
 
