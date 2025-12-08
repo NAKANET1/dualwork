@@ -1,10 +1,10 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Usecase from "./pages/Usecase";
-import Home from "./pages/home";
-import Member from "./pages/member";
+import Home from "./pages/Home";
+import Member from "./pages/Member";
 import MemberReg from "./pages/MemberReg";
 import MemberEdit from "./pages/MemberEdit";
-import Schedule from "./pages/schedule";
+import Schedule from "./pages/Schedule";
 import ScheduleReg from "./pages/ScheduleReg";
 import ScheduleEdit from "./pages/ScheduleEdit";
 
