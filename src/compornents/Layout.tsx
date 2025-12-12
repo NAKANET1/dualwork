@@ -12,7 +12,7 @@ function Layout({ title, children, rightButtons }: LayoutProps) {
   const goHome = () => navigate("/");
 
   return (
-    <div className="min-h-screen flex flex-col w-full">
+    <div className="min-h-screen flex flex-col w-full ">
       {/* ===== ヘッダー ===== */}
       <header className="w-full flex items-center justify-between px-6 py-4 bg-white relative">
         {/* 左：ロゴ */}

@@ -8,12 +8,12 @@ function Home() {
   // 現在年月を取得
   const now = new Date();
   const year = now.getFullYear();
-  const month = now.getMonth() + 1; // 0-11 なので +1
+  const month = now.getMonth() + 1;
   const title = `${year}年${month}月`;
 
   return (
     <Layout
-      title={title} // 動的タイトル
+      title={title}
       rightButtons={
         <>
             <Button label="メンバー" onClick={() => navigate("/member")} />
