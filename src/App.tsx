@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Usecase from "./pages/Usecase";
 import Home from "./pages/Home";
 import Member from "./pages/Member";
 import MemberReg from "./pages/MemberReg";
@@ -12,7 +11,6 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/usecase" element={<Usecase />} />
         <Route path="/" element={<Home />} />
         <Route path="/member" element={<Member />} />
         <Route path="/member-reg" element={<MemberReg />} />

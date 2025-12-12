@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 type LayoutProps = {
   title: string;
   children: ReactNode;
-  rightButtons?: ReactNode; // Home専用のボタンなど
+  rightButtons?: ReactNode;
 };
 
 function Layout({ title, children, rightButtons }: LayoutProps) {
@@ -12,8 +12,8 @@ function Layout({ title, children, rightButtons }: LayoutProps) {
   const goHome = () => navigate("/");
 
   return (
-    <div className="min-h-screen flex flex-col w-full ">
-      {/* ===== ヘッダー ===== */}
+    <div className="min-h-screen flex flex-col ml-20 mr-20">
+      {/* ヘッダー */}
       <header className="w-full flex items-center justify-between px-6 py-4 bg-white relative">
         {/* 左：ロゴ */}
         <img
@@ -25,14 +25,14 @@ function Layout({ title, children, rightButtons }: LayoutProps) {
 
         {/* 中央：タイトル */}
         <div className="absolute left-1/2 transform -translate-x-1/2 text-center">
-          <h1 className="text-2xl font-bold">{title}</h1>
+          <h1 className="text-4xl font-bold">{title}</h1>
         </div>
 
         {/* 右：ボタン */}
         <div className="flex gap-2">{rightButtons}</div>
       </header>
 
-      {/* ===== コンテンツ ===== */}
+      {/* コンテンツ */}
       <main className="flex-grow p-6 w-full">{children}</main>
     </div>
   );

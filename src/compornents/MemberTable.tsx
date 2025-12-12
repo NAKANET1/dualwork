@@ -39,7 +39,7 @@ function MemberSettingTable({
             </td>
           </tr>
 
-          {/* カラー（色つきプルダウン） */}
+          {/* カラー */}
           <tr>
             <td className="border border-gray-300 p-3 bg-gray-100">カラー</td>
             <td className="border border-gray-300 p-3">

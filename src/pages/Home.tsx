@@ -1,27 +1,30 @@
 import Layout from "../compornents/Layout";
 import Button from "../compornents/Button";
+import Calendar from "../compornents/Calendar";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 function Home() {
   const navigate = useNavigate();
-
-  // 現在年月を取得
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth() + 1;
-  const title = `${year}年${month}月`;
+  const [calendarTitle, setCalendarTitle] = useState("");
 
   return (
     <Layout
-      title={title}
+      title={calendarTitle}
       rightButtons={
         <>
-            <Button label="メンバー" onClick={() => navigate("/member")} />
-            <Button label="スケジュール" onClick={() => navigate("/schedule")} />
+          <Button label="メンバー" onClick={() => navigate("/member")} />
+          <Button label="スケジュール" onClick={() => navigate("/schedule")} />
         </>
       }
     >
-      <div className="flex flex-col items-center gap-4 mt-10">
+      <div className="flex flex-col items-center">
+
+        {/* 月が変わるとタイトルが更新される */}
+        <Calendar
+          onMonthChange={(title) => setCalendarTitle(title)}
+        />
+
       </div>
     </Layout>
   );
