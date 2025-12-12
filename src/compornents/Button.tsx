@@ -13,7 +13,7 @@ function Button({
   color = "blue",
   className = "",
 }: ButtonProps) {
-  // ▼ サイズ別クラス
+  // サイズ
   const sizeClass =
     size === "sm"
       ? "px-6 py-1.5"
@@ -21,7 +21,7 @@ function Button({
       ? "px-18 py-3"
       : "px-8 py-2";
 
-  // ▼ 色別クラス
+  // 色
   const colorClass =
     color === "gray"
       ? "bg-gray-400 hover:bg-gray-500 text-white"
@@ -32,7 +32,7 @@ function Button({
   return (
     <button
       onClick={onClick}
-      className={`${sizeClass} ${colorClass} rounded-full transition ${className}`}
+      className={`${sizeClass} ${colorClass} rounded-full transition cursor-pointer ${className}`}
     >
       {label}
     </button>

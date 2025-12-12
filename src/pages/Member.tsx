@@ -30,7 +30,7 @@ function Home() {
   const columns: Column<Member>[] = [
     { key: "name", label: "名前", accessor: (row) => row.name },
 
-    // 背景色表示（内容は color.value）
+    // 背景色表示
     {
       key: "color",
       label: "表示カラー",
