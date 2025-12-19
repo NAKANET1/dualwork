@@ -11,10 +11,10 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  --fc-today-bg-color:#d6e7fc;
+  --fc-today-bg-color: #d6e7fc;
 }
 
-.fc .fc-toolbar-title{
+.fc .fc-toolbar-title {
   display: none !important;
 }
 
@@ -23,16 +23,16 @@
 }
 
 .fc .fc-button-primary {
-  background-color: #3B82F6;
-  border: #1D4ED8;
+  background-color: #3b82f6;
+  border: #1d4ed8;
 }
 
 .fc .fc-button-primary:hover {
-  background-color: #1D4ED8;
+  background-color: #1d4ed8;
 }
 
 .fc .fc-button-primary:active {
-  background-color: #1D4ED8;
+  background-color: #1d4ed8;
 }
 
 .fc .fc-button-primary:disabled {
@@ -49,11 +49,9 @@
   background-color: #f0f0f0 !important;
 }
 
-
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
     background-color: #ffffff;
   }
-
 }

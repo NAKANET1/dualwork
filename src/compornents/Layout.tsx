@@ -33,7 +33,7 @@ function Layout({ title, children, rightButtons }: LayoutProps) {
       </header>
 
       {/* コンテンツ */}
-      <main className="flex-grow p-6 w-full">{children}</main>
+      <main className="flex-grow px-6 w-full">{children}</main>
     </div>
   );
 }

@@ -13,7 +13,6 @@ function MemberEdit() {
       <div className="mt-6">
         <MemberSettingTable
           initialName={member?.name}
-          initialColor={member?.color}
           initialEnabled={member?.enabled}
         />
       </div>

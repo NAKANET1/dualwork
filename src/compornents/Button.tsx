@@ -1,9 +1,13 @@
+import type { ReactNode } from "react";
+
 type ButtonProps = {
   label: string;
   onClick?: () => void;
   size?: "sm" | "md" | "lg";
   color?: "blue" | "gray" | "red";
   className?: string;
+  icon?: ReactNode;
+  iconPosition?: "left" | "right";
 };
 
 function Button({
@@ -12,14 +16,11 @@ function Button({
   size = "md",
   color = "blue",
   className = "",
+  icon,
 }: ButtonProps) {
   // サイズ
   const sizeClass =
-    size === "sm"
-      ? "px-6 py-1.5"
-      : size === "lg"
-      ? "px-18 py-3"
-      : "px-8 py-2";
+    size === "sm" ? "px-6 py-1.5" : size === "lg" ? "px-18 py-3" : "px-8 py-2";
 
   // 色
   const colorClass =
@@ -32,9 +33,10 @@ function Button({
   return (
     <button
       onClick={onClick}
-      className={`${sizeClass} ${colorClass} rounded-full transition cursor-pointer ${className}`}
+      className={`flex ${sizeClass} ${colorClass} rounded-md transition cursor-pointer ${className}`}
     >
-      {label}
+      {icon && <span className="inline-flex items-center pr-3">{icon}</span>}
+      <span>{label}</span>
     </button>
   );
 }
