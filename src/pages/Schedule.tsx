@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { ReusableTable } from "../compornents/ReusableTable";
 import type { Column } from "../compornents/ReusableTable";
 
-
 type Schedule = {
   id: number;
   name: string;
@@ -19,7 +18,7 @@ type Schedule = {
 function ScheduleList() {
   const navigate = useNavigate();
 
-  // 仮データ
+  // サンプルデータ
   const scheduleData: Schedule[] = [
     {
       id: 1,
@@ -41,12 +40,16 @@ function ScheduleList() {
 
   // カラム設定
   const scheduleColumns: Column<Schedule>[] = [
-    { key: "name", label: "名前", accessor: r => r.name },
-    { key: "workType", label: "勤務タイプ", accessor: r => r.workType },
-    { key: "trigger", label: "トリガー", accessor: r => r.trigger },
-    { key: "start", label: "開始日", accessor: r => r.start },
-    { key: "end", label: "終了日", accessor: r => r.end },
-    { key: "enabled", label: "有効", accessor: r => (r.enabled ? "有効" : "無効") },
+    { key: "name", label: "名前", accessor: (r) => r.name },
+    { key: "workType", label: "勤務タイプ", accessor: (r) => r.workType },
+    { key: "trigger", label: "トリガー", accessor: (r) => r.trigger },
+    { key: "start", label: "開始日", accessor: (r) => r.start },
+    { key: "end", label: "終了日", accessor: (r) => r.end },
+    {
+      key: "enabled",
+      label: "有効",
+      accessor: (r) => (r.enabled ? "有効" : "無効"),
+    },
     {
       key: "edit",
       label: "編集",
@@ -56,6 +59,7 @@ function ScheduleList() {
           size="sm"
           color="blue"
           onClick={() => navigate(`/schedule-edit?id=${row.id}`)}
+          className="m-auto"
         />
       ),
     },
@@ -77,10 +81,25 @@ function ScheduleList() {
     <Layout
       title="スケジュール管理"
       rightButtons={
-        <Button
-          label="スケジュール追加"
-          onClick={() => navigate("/schedule-reg")}
-        />
+        <>
+          <Button
+            label="戻る"
+            size="md"
+            color="gray"
+            onClick={() => navigate(-1)}
+          />
+          <Button
+            icon={
+              <img
+                src="../public/CalendarIcon.png"
+                alt="icon"
+                className="w-4 h-4"
+              />
+            }
+            label="スケジュール"
+            onClick={() => navigate("/schedule")}
+          />
+        </>
       }
     >
       <div className="w-200 mx-auto flex flex-col items-center gap-4 mt-10">

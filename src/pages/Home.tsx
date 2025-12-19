@@ -13,18 +13,21 @@ function Home() {
       title={calendarTitle}
       rightButtons={
         <>
-          <Button label="メンバー" onClick={() => navigate("/member")} />
-          <Button label="スケジュール" onClick={() => navigate("/schedule")} />
+          <Button
+            icon={
+              <img src="../public/PeopleIcon.png" alt="icon"/>
+            }
+            label="メンバー"
+            onClick={() => navigate("/member")}
+          />
+          <Button icon={<img src="../public/CalendarIcon.png" alt="icon"/>
+            }label="スケジュール" onClick={() => navigate("/schedule")} />
         </>
       }
     >
       <div className="flex flex-col items-center">
-
         {/* 月が変わるとタイトルが更新される */}
-        <Calendar
-          onMonthChange={(title) => setCalendarTitle(title)}
-        />
-
+        <Calendar onMonthChange={(title) => setCalendarTitle(title)} />
       </div>
     </Layout>
   );

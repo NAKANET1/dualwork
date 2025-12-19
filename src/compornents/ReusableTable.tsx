@@ -5,7 +5,6 @@ export type Column<T> = {
   label: string;
   accessor?: (row: T) => React.ReactNode;
   render?: (row: T) => React.ReactNode;
-  isColorCell?: boolean;
 };
 
 type Props<T> = {
@@ -19,7 +18,10 @@ export function ReusableTable<T>({ columns, data }: Props<T>) {
       <thead className="bg-gray-100">
         <tr>
           {columns.map((col) => (
-            <th key={col.key} className="px-4 py-2 border border-gray-400">
+            <th
+              key={col.key}
+              className="px-2 py-2 border border-gray-400"
+            >
               {col.label}
             </th>
           ))}
@@ -34,27 +36,13 @@ export function ReusableTable<T>({ columns, data }: Props<T>) {
                 ? col.render(row)
                 : col.accessor
                 ? col.accessor(row)
-                : "";
-
-              // 色セルは専用表示
-              if (col.isColorCell) {
-                return (
-                  <td
-                    key={col.key}
-                    className="border border-gray-400 px-4 py-2"
-                  >
-                    <div
-                      className="w-full h-6 rounded"
-                      style={{
-                        backgroundColor: String(content),
-                      }}
-                    ></div>
-                  </td>
-                );
-              }
+                : null;
 
               return (
-                <td key={col.key} className="px-4 py-2 border border-gray-400">
+                <td
+                  key={col.key}
+                  className="px-2 py-2 border border-gray-400"
+                >
                   {content}
                 </td>
               );
