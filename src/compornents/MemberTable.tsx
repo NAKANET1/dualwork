@@ -1,13 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-function MemberSettingTable({
+type Props = {
+  initialName?: string;
+  initialEnabled?: boolean;
+  onChange: (data: { name: string; enabled: boolean }) => void;
+};
+
+function MemberTable({
   initialName = "",
   initialEnabled = true,
-}) {
+  onChange,
+}: Props) {
   const [name, setName] = useState(initialName);
   const [enabled, setEnabled] = useState(initialEnabled);
 
+  // Firestore 取得後の初期値反映対応
+  useEffect(() => {
+    setName(initialName);
+    setEnabled(initialEnabled);
+  }, [initialName, initialEnabled]);
 
+  // 値変更時に常に親へ通知
+  useEffect(() => {
+    onChange({ name, enabled });
+  }, [name, enabled, onChange]);
 
   return (
     <div className="w-200 mx-auto">
@@ -52,4 +68,4 @@ function MemberSettingTable({
   );
 }
 
-export default MemberSettingTable;
+export default MemberTable;
