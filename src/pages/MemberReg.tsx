@@ -3,24 +3,56 @@ import MemberSettingTable from "../compornents/MemberTable";
 import Button from "../compornents/Button";
 import { useNavigate } from "react-router-dom";
 
+import { useState } from "react";
+import { db } from "../../firebase";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+
 function MemberCreate() {
   const navigate = useNavigate();
+
+  // フォーム状態
+  const [formData, setFormData] = useState<{
+    name: string;
+    enabled: boolean;
+  }>({
+    name: "",
+    enabled: true,
+  });
+
+  // 登録処理
+  const handleCreate = async () => {
+    if (!formData.name.trim()) {
+      alert("名前を入力してください");
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, "members"), {
+        name: formData.name,
+        enabled: formData.enabled,
+        createdAt: serverTimestamp(),
+      });
+
+      alert("メンバーを登録しました");
+      navigate(-1); // 一覧へ戻す場合は navigate("/members") など
+    } catch (error) {
+      console.error("登録エラー:", error);
+      alert("登録に失敗しました");
+    }
+  };
 
   return (
     <Layout title="メンバー登録">
       <div className="mt-6">
-        <MemberSettingTable initialName="" initialEnabled={true} />
+        <MemberSettingTable
+          initialName=""
+          initialEnabled={true}
+          onChange={setFormData}
+        />
       </div>
 
       <div className="flex justify-center gap-10 mt-10">
-        <Button
-          label="登録"
-          size="lg"
-          color="blue"
-          onClick={() => {
-            console.log("新規登録処理を実行");
-          }}
-        />
+        <Button label="登録" size="lg" color="blue" onClick={handleCreate} />
         <Button
           label="戻る"
           size="lg"
