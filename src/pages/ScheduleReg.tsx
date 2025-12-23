@@ -1,11 +1,11 @@
+import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { db } from "../../firebase";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+
 import Layout from "../compornents/Layout";
 import ScheduleTable from "../compornents/ScheduleTable";
 import Button from "../compornents/Button";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useState } from "react";
-
-import { db } from "../../firebase";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 
 type ScheduleData = {
   name: string;

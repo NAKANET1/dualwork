@@ -1,16 +1,16 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { db } from "../../firebase";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+
 import Layout from "../compornents/Layout";
 import MemberSettingTable from "../compornents/MemberTable";
 import Button from "../compornents/Button";
-import { useNavigate } from "react-router-dom";
-
-import { useState } from "react";
-import { db } from "../../firebase";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 
 function MemberCreate() {
   const navigate = useNavigate();
 
-  // フォーム状態
+  // フォーム
   const [formData, setFormData] = useState<{
     name: string;
     enabled: boolean;
@@ -34,7 +34,7 @@ function MemberCreate() {
       });
 
       alert("メンバーを登録しました");
-      navigate(-1); // 一覧へ戻す場合は navigate("/members") など
+      navigate(-1);
     } catch (error) {
       console.error("登録エラー:", error);
       alert("登録に失敗しました");

@@ -17,7 +17,7 @@ function App() {
         <Route path="/member-edit/:id" element={<MemberEdit />} />
         <Route path="/schedule" element={<Schedule />} />
         <Route path="/schedule-registration" element={<ScheduleReg />} />
-        <Route path="/schedule-edit" element={<ScheduleEdit />} />
+        <Route path="/schedule-edit/:id" element={<ScheduleEdit />} />
       </Routes>
     </Router>
   );
