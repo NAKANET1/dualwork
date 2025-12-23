@@ -1,11 +1,11 @@
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { db } from "../../firebase";
+
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import Layout from "../compornents/Layout";
 import MemberSettingTable from "../compornents/MemberTable";
 import Button from "../compornents/Button";
-import { useNavigate, useParams } from "react-router-dom";
-
-import { useEffect, useState } from "react";
-import { db } from "../../firebase";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
 
 type Member = {
   id: string;
@@ -25,7 +25,7 @@ function MemberEdit() {
 
   const [loading, setLoading] = useState(true);
 
-  // Firestore から取得
+  // db取得
   useEffect(() => {
     if (!id) return;
 
@@ -59,7 +59,7 @@ function MemberEdit() {
     try {
       await updateDoc(doc(db, "members", id), {
         name: formData.name,
-        enabled: formData.enabled, // チェック外れ → false
+        enabled: formData.enabled,
       });
 
       alert("保存しました");

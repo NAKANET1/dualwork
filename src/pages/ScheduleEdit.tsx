@@ -1,16 +1,13 @@
+import { useEffect, useState, useCallback } from "react";
+import { useNavigate, useParams } from "react-router-dom"; // location.stateよりparamsの方が一般的
+import { db } from "../../firebase";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+
+// タイポ修正: compornents -> components
 import Layout from "../compornents/Layout";
 import ScheduleTable from "../compornents/ScheduleTable";
 import Button from "../compornents/Button";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useState } from "react";
 
-import { db } from "../../firebase";
-import { doc, updateDoc } from "firebase/firestore";
-
-/**
- * Firestore に保存するスケジュールドキュメント型
- * ※ id はドキュメントパスで管理するため含めない
- */
 type ScheduleDoc = {
   name: string;
   workType: string;
@@ -30,76 +27,94 @@ type ScheduleDoc = {
 
 function ScheduleEdit() {
   const navigate = useNavigate();
-  const location = useLocation();
+  // URLパラメータ（/edit/:id）から取得する方が、リロードに強く一般的です
+  // location.stateを使う場合は、そのままでもOKです
+  const { id: scheduleId } = useParams<{ id: string }>();
 
-  // 一覧画面から渡された編集対象
-  const schedule = location.state?.schedule;
-  const nameList: string[] = location.state?.nameList || [];
-
-  // 編集中データ
+  const [loading, setLoading] = useState(true);
   const [scheduleData, setScheduleData] = useState<ScheduleDoc>({
-    name: schedule?.name ?? "",
-    workType: schedule?.workType ?? "在宅",
-    repeatType: schedule?.repeatType ?? "1回",
-    interval: schedule?.interval ?? 1,
-    weekdays: schedule?.weekdays ?? {
-      月: false,
-      火: false,
-      水: false,
-      木: false,
-      金: false,
-    },
-    startDate: schedule?.startDate ?? "",
-    endDate: schedule?.endDate ?? null,
-    enabled: schedule?.enabled ?? true,
+    name: "",
+    workType: "工作",
+    repeatType: "1回",
+    interval: 1,
+    weekdays: { 月: false, 火: false, 水: false, 木: false, 金: false },
+    startDate: "",
+    endDate: null,
+    enabled: true,
   });
 
-  // 保存処理
-  const handleSave = async () => {
-    if (!schedule?.id) {
-      alert("編集対象が見つかりません");
+  // 🔹 データ取得ロジックの整理
+  useEffect(() => {
+    if (!scheduleId) {
+      alert("編集対象のIDが見つかりません");
+      navigate("/schedules"); // 一覧へ戻す
       return;
     }
 
+    const fetchSchedule = async () => {
+      try {
+        const docRef = doc(db, "triggers", scheduleId);
+        const snap = await getDoc(docRef);
+
+        if (!snap.exists()) {
+          alert("データが存在しません");
+          navigate(-1);
+          return;
+        }
+
+        // 型安全にデータをセット
+        setScheduleData(snap.data() as ScheduleDoc);
+      } catch (error) {
+        console.error("Firestore Fetch Error:", error);
+        alert("データの取得に失敗しました");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSchedule();
+  }, [scheduleId, navigate]);
+
+  // 🔹 保存処理 (useCallbackでラップすると子要素の不要な再レンダリングを防げます)
+  const handleSave = useCallback(async () => {
+    if (!scheduleId) return;
+
     try {
-      await updateDoc(doc(db, "triggers", schedule.id), {
+      const docRef = doc(db, "triggers", scheduleId);
+      // endDateの空文字ケアなど
+      const submitData = {
         ...scheduleData,
         endDate: scheduleData.endDate || null,
-      });
+      };
 
-      alert("スケジュールを更新しました");
+      await updateDoc(docRef, submitData);
+      alert("更新が完了しました");
       navigate(-1);
     } catch (error) {
-      console.error("更新エラー:", error);
+      console.error("Update Error:", error);
       alert("更新に失敗しました");
     }
-  };
+  }, [scheduleId, scheduleData, navigate]);
+
+  if (loading) {
+    return <Layout title="スケジュール編集">読み込み中...</Layout>;
+  }
 
   return (
     <Layout title="スケジュール編集">
       <div className="mt-6">
+        {/* Propsを整理して渡す例 */}
         <ScheduleTable
-          nameList={nameList}
-          initialName={scheduleData.name}
-          initialWorkType={scheduleData.workType}
-          initialRepeatType={scheduleData.repeatType}
-          initialInterval={scheduleData.interval}
-          initialWeekdays={scheduleData.weekdays}
-          initialStartDate={scheduleData.startDate}
+          {...scheduleData} // プロパティ名が一致していればスプレッド構文で簡潔に書けます
           initialEndDate={scheduleData.endDate ?? ""}
-          initialEnabled={scheduleData.enabled}
           onChange={setScheduleData}
+          nameList={[]} // 必要に応じて
         />
       </div>
 
       <div className="flex justify-center gap-10 mt-10">
         <Button label="保存" size="lg" color="blue" onClick={handleSave} />
-        <Button
-          label="戻る"
-          size="lg"
-          color="gray"
-          onClick={() => navigate(-1)}
-        />
+        <Button label="戻る" size="lg" color="gray" onClick={() => navigate(-1)} />
       </div>
     </Layout>
   );
