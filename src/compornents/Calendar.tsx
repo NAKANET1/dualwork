@@ -1,44 +1,55 @@
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import jaLocale from "@fullcalendar/core/locales/ja";
 
-type CalendarEvent = {
-  id?: string;
-  title: string;
-  date: string;
-};
+import type { CalendarEvent } from "../types/calendar";
 
 type CalendarProps = {
-  events?: CalendarEvent[];
-  onDateClick?: (dateStr: string) => void;
-  onEventClick?: (eventId: string) => void;
-
-  // 月変更時
-  onMonthChange?: (title: string) => void;
+  events: CalendarEvent[];
+  onMonthChange: (title: string) => void;
+  onEventClick?: (event: CalendarEvent) => void;
 };
 
-function Calendar({
-  events = [],
-  onDateClick,
-  onEventClick,
-  onMonthChange,
-}: CalendarProps) {
+function Calendar({ events, onMonthChange, onEventClick }: CalendarProps) {
   return (
-    <FullCalendar
-      plugins={[dayGridPlugin, interactionPlugin]}
-      initialView="dayGridMonth"
-      locales={[jaLocale]}
-      locale="ja"
-      height="auto"
-      events={events}
-      dateClick={(info) => onDateClick?.(info.dateStr)}
-      eventClick={(info) => onEventClick?.(info.event.id!)}
-      // カレンダーの月が変わる度に呼ばれる
-      datesSet={(info) => {
-        onMonthChange?.(info.view.title);
-      }}
-    />
+    <div className="w-full max-w-5xl">
+      <FullCalendar
+        plugins={[dayGridPlugin, interactionPlugin]}
+        initialView="dayGridMonth"
+        locale="ja"
+        height="auto"
+        /** 月が変わったときにタイトル通知 */
+        datesSet={(arg) => {
+          onMonthChange(arg.view.title);
+        }}
+        /** カレンダーに表示するイベント */
+        events={events.map((e) => ({
+          title: e.title,
+          date: e.date,
+          backgroundColor: e.backgroundColor,
+
+          /** クリック時に必要な情報を保持 */
+          extendedProps: {
+            triggerId: e.triggerId,
+            workType: e.workType,
+            date: e.date,
+            title: e.title,
+          },
+        }))}
+        /** 予定クリック */
+        eventClick={(info) => {
+          if (!onEventClick) return;
+
+          onEventClick({
+            title: info.event.title,
+            date: info.event.startStr,
+            backgroundColor: info.event.backgroundColor || "#999",
+            triggerId: info.event.extendedProps.triggerId,
+            workType: info.event.extendedProps.workType,
+          });
+        }}
+      />
+    </div>
   );
 }
 

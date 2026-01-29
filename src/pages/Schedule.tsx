@@ -8,14 +8,17 @@ import { useEffect, useState } from "react";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase";
 
-/** Firestore / 編集用 */
+/** Firestore 実体 */
 type ScheduleEntity = {
   id: string;
   name: string;
   workType: string;
+  cycleType: "CALENDAR" | "DAY_CYCLE";
   repeatType: string;
   interval: number;
   weekdays: { [key: string]: boolean };
+  onDays: number;
+  offDays: number;
   startDate: string;
   endDate: string | null;
   enabled: boolean;
@@ -37,7 +40,6 @@ function ScheduleList() {
   const navigate = useNavigate();
   const [rows, setRows] = useState<ScheduleRow[]>([]);
 
-  // Firestore 取得
   useEffect(() => {
     const fetchSchedules = async () => {
       const snapshot = await getDocs(collection(db, "triggers"));
@@ -49,19 +51,39 @@ function ScheduleList() {
           id: docSnap.id,
           name: d.name,
           workType: d.workType,
+          cycleType: d.cycleType,
           repeatType: d.repeatType,
           interval: d.interval,
           weekdays: d.weekdays,
+          onDays: d.onDays,
+          offDays: d.offDays,
           startDate: d.startDate,
           endDate: d.endDate ?? null,
           enabled: d.enabled,
         };
 
+        /** トリガー表示文字列 */
+        let triggerText = "";
+
+        if (entity.cycleType === "CALENDAR") {
+          const activeDays = Object.entries(entity.weekdays)
+            .filter(([, v]) => v)
+            .map(([k]) => k)
+            .join(",");
+
+          triggerText =
+            entity.repeatType === "1回"
+              ? "1回"
+              : `${entity.repeatType} / ${entity.interval}（${activeDays || "曜日指定なし"}）`;
+        } else {
+          triggerText = `実行 ${entity.onDays} 日 / 休止 ${entity.offDays} 日`;
+        }
+
         return {
           id: entity.id,
           name: entity.name,
           workType: entity.workType,
-          trigger: `${entity.repeatType}（${entity.interval}）`,
+          trigger: triggerText,
           start: entity.startDate,
           end: entity.endDate ?? "-",
           enabled: entity.enabled,
@@ -83,7 +105,6 @@ function ScheduleList() {
     setRows((prev) => prev.filter((r) => r.id !== id));
   };
 
-  // カラム定義
   const scheduleColumns: Column<ScheduleRow>[] = [
     { key: "name", label: "名前", accessor: (r) => r.name },
     { key: "workType", label: "勤務タイプ", accessor: (r) => r.workType },
@@ -103,11 +124,7 @@ function ScheduleList() {
           label="編集"
           size="sm"
           color="blue"
-          onClick={() =>
-            navigate("/schedule-edit", {
-              state: { schedule: row.original },
-            })
-          }
+          onClick={() => navigate(`/schedule-edit/${row.id}`, {})}
         />
       ),
     },
@@ -119,7 +136,7 @@ function ScheduleList() {
           label="削除"
           size="sm"
           color="red"
-          onClick={() => navigate("/schedule-edit", { state: { id: row.id } })}
+          onClick={() => handleDelete(row.id, row.name)}
         />
       ),
     },
