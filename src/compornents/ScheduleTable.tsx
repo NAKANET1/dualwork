@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 type Weekdays = {
   月: boolean;
@@ -11,7 +11,7 @@ type Weekdays = {
 export type ScheduleFormData = {
   name: string;
   workType: string;
-  cycleType: "CALENDAR" | "DAY_CYCLE";
+  cycleType: 'CALENDAR' | 'DAY_CYCLE';
   repeatType: string;
   interval: number;
   weekdays: Weekdays;
@@ -39,13 +39,13 @@ type ScheduleTableProps = {
 
 function ScheduleTable({
   nameList,
-  initialName = "",
-  initialWorkType = "在宅",
-  initialRepeatType = "1回",
+  initialName = '',
+  initialWorkType = '在宅',
+  initialRepeatType = '1回',
   initialInterval = 0,
   initialWeekdays = { 月: false, 火: false, 水: false, 木: false, 金: false },
-  initialStartDate = "",
-  initialEndDate = "",
+  initialStartDate = '',
+  initialEndDate = '',
   initialEnabled = true,
   onChange,
 }: ScheduleTableProps) {
@@ -54,9 +54,7 @@ function ScheduleTable({
   const [workType, setWorkType] = useState(initialWorkType);
 
   /** 繰り返し方式 */
-  const [cycleType, setCycleType] = useState<"CALENDAR" | "DAY_CYCLE">(
-    "CALENDAR",
-  );
+  const [cycleType, setCycleType] = useState<'CALENDAR' | 'DAY_CYCLE'>('CALENDAR');
 
   /** 曜日・週単位 */
   const [repeatType, setRepeatType] = useState(initialRepeatType);
@@ -74,7 +72,7 @@ function ScheduleTable({
 
   useEffect(() => {
     // 1回：曜日はすべて解除
-    if (repeatType === "1回") {
+    if (repeatType === '1回') {
       setWeekdays({
         月: false,
         火: false,
@@ -82,12 +80,12 @@ function ScheduleTable({
         木: false,
         金: false,
       });
-      setEndDate("");
+      setEndDate('');
       return;
     }
 
     // 毎日：平日（月〜金）を強制ON
-    if (repeatType === "毎日") {
+    if (repeatType === '毎日') {
       setWeekdays({
         月: true,
         火: true,
@@ -142,9 +140,7 @@ function ScheduleTable({
         <tbody>
           {/* 名前 */}
           <tr>
-            <td className="border border-gray-300 p-3 bg-gray-100 w-1/3">
-              名前
-            </td>
+            <td className="border border-gray-300 p-3 bg-gray-100 w-1/3">名前</td>
             <td className="border border-gray-300 p-3">
               <select
                 value={name}
@@ -163,18 +159,16 @@ function ScheduleTable({
 
           {/* 勤務タイプ */}
           <tr>
-            <td className="border border-gray-300 p-3 bg-gray-100">
-              勤務タイプ
-            </td>
+            <td className="border border-gray-300 p-3 bg-gray-100">勤務タイプ</td>
             <td className="border border-gray-300 p-3">
-              {["在宅", "出社"].map((type) => (
+              {['在宅', '出社'].map((type) => (
                 <label key={type} className="mr-4 cursor-pointer">
                   <input
                     type="radio"
                     value={type}
                     checked={workType === type}
                     onChange={(e) => setWorkType(e.target.value)}
-                  />{" "}
+                  />{' '}
                   {type}
                 </label>
               ))}
@@ -183,45 +177,33 @@ function ScheduleTable({
 
           {/* 繰り返し方式 */}
           <tr>
-            <td className="border border-gray-300 p-3 bg-gray-100">
-              繰り返し方法
-            </td>
+            <td className="border border-gray-300 p-3 bg-gray-100">繰り返し方法</td>
             <td className="border border-gray-300 p-3">
               <label className="mr-4 cursor-pointer">
-                <input
-                  type="radio"
-                  checked={cycleType === "CALENDAR"}
-                  onChange={() => setCycleType("CALENDAR")}
-                />{" "}
+                <input type="radio" checked={cycleType === 'CALENDAR'} onChange={() => setCycleType('CALENDAR')} />{' '}
                 曜日・週単位
               </label>
               <label className="cursor-pointer">
-                <input
-                  type="radio"
-                  checked={cycleType === "DAY_CYCLE"}
-                  onChange={() => setCycleType("DAY_CYCLE")}
-                />{" "}
+                <input type="radio" checked={cycleType === 'DAY_CYCLE'} onChange={() => setCycleType('DAY_CYCLE')} />{' '}
                 日数パターン
               </label>
             </td>
           </tr>
 
           {/* 曜日・週単位 */}
-          {cycleType === "CALENDAR" && (
+          {cycleType === 'CALENDAR' && (
             <>
               <tr>
-                <td className="border border-gray-300 p-3 bg-gray-100">
-                  繰り返し
-                </td>
+                <td className="border border-gray-300 p-3 bg-gray-100">繰り返し</td>
                 <td className="border border-gray-300 p-3">
-                  {["1回", "毎日", "毎週", "毎月"].map((type) => (
+                  {['1回', '毎日', '毎週', '毎月'].map((type) => (
                     <label key={type} className="mr-4 cursor-pointer">
                       <input
                         type="radio"
                         value={type}
                         checked={repeatType === type}
                         onChange={(e) => setRepeatType(e.target.value)}
-                      />{" "}
+                      />{' '}
                       {type}
                     </label>
                   ))}
@@ -235,7 +217,7 @@ function ScheduleTable({
                     type="number"
                     min={0}
                     value={interval}
-                    disabled={repeatType === "1回" || repeatType === "毎日"}
+                    disabled={repeatType === '1回' || repeatType === '毎日'}
                     onChange={(e) => setInterval(Number(e.target.value || 0))}
                     className="border border-gray-300 rounded p-2 w-full disabled:bg-gray-100"
                   />
@@ -250,9 +232,9 @@ function ScheduleTable({
                       <input
                         type="checkbox"
                         checked={weekdays[day as keyof Weekdays]}
-                        disabled={repeatType === "1回" || repeatType === "毎日"}
+                        disabled={repeatType === '1回' || repeatType === '毎日'}
                         onChange={() => toggleWeekday(day as keyof Weekdays)}
-                      />{" "}
+                      />{' '}
                       {day}
                     </label>
                   ))}
@@ -262,11 +244,9 @@ function ScheduleTable({
           )}
 
           {/* 日数パターン */}
-          {cycleType === "DAY_CYCLE" && (
+          {cycleType === 'DAY_CYCLE' && (
             <tr>
-              <td className="border border-gray-300 p-3 bg-gray-100">
-                日数パターン
-              </td>
+              <td className="border border-gray-300 p-3 bg-gray-100">日数パターン</td>
               <td className="border border-gray-300 p-3">
                 実行
                 <input
@@ -309,7 +289,7 @@ function ScheduleTable({
               <input
                 type="date"
                 value={endDate}
-                disabled={repeatType === "1回"}
+                disabled={cycleType === 'CALENDAR' && repeatType === '1回'}
                 onChange={(e) => setEndDate(e.target.value)}
                 className="border border-gray-300 rounded p-2 w-full disabled:bg-gray-100"
               />
@@ -321,11 +301,7 @@ function ScheduleTable({
             <td className="border border-gray-300 p-3 bg-gray-100">有効</td>
             <td className="border border-gray-300 p-3">
               <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={enabled}
-                  onChange={() => setEnabled(!enabled)}
-                />
+                <input type="checkbox" checked={enabled} onChange={() => setEnabled(!enabled)} />
                 有効
               </label>
             </td>
