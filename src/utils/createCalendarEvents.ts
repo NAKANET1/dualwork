@@ -5,7 +5,7 @@ import type { ScheduleOverride } from '../types/scheduleOverride';
 export function createCalendarEvents(
   triggers: Trigger[],
   overrides: ScheduleOverride[],
-  viewStart: Date,
+  _viewStart: Date,
   viewEnd: Date,
 ): CalendarEvent[] {
   const events: CalendarEvent[] = [];
