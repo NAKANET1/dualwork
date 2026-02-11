@@ -1,11 +1,12 @@
-// src/utils/createCalendarEvents.ts
-import type { Trigger } from "../types/trigger";
-import type { CalendarEvent } from "../types/calendar";
-import type { ScheduleOverride } from "../types/scheduleOverride";
+import type { Trigger } from '../types/trigger';
+import type { CalendarEvent } from '../types/calendar';
+import type { ScheduleOverride } from '../types/scheduleOverride';
 
 export function createCalendarEvents(
   triggers: Trigger[],
   overrides: ScheduleOverride[],
+  viewStart: Date,
+  viewEnd: Date,
 ): CalendarEvent[] {
   const events: CalendarEvent[] = [];
 
@@ -18,17 +19,20 @@ export function createCalendarEvents(
   triggers.forEach((t) => {
     if (!t.enabled) return;
 
+    /** 開始日 */
     const start = new Date(t.startDate);
-    const end = t.endDate ? new Date(t.endDate) : addDays(start, 30);
+
+    /** 無期限なら表示範囲まで */
+    const end = t.endDate ? new Date(t.endDate) : new Date(viewEnd);
 
     /** ======================
      * CALENDAR
      * ====================== */
-    if (t.cycleType === "CALENDAR") {
+    if (t.cycleType === 'CALENDAR') {
       /** 単発 */
-      if (t.repeatType === "1回") {
+      if (t.repeatType === '1回') {
         if (isWeekday(start)) {
-          pushEvent(events, t, formatDate(start), overrideMap);
+          pushEvent(events, t, formatDateLocal(start), overrideMap);
         }
         return;
       }
@@ -36,15 +40,15 @@ export function createCalendarEvents(
       for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
         if (!isWeekday(d)) continue;
 
-        if (t.repeatType === "毎日") {
-          pushEvent(events, t, formatDate(d), overrideMap);
+        if (t.repeatType === '毎日') {
+          pushEvent(events, t, formatDateLocal(d), overrideMap);
         }
 
-        if (t.repeatType === "毎週") {
-          const weekMap = ["日", "月", "火", "水", "木", "金", "土"];
+        if (t.repeatType === '毎週') {
+          const weekMap = ['日', '月', '火', '水', '木', '金', '土'];
           const day = weekMap[d.getDay()];
           if (t.weekdays?.[day]) {
-            pushEvent(events, t, formatDate(d), overrideMap);
+            pushEvent(events, t, formatDateLocal(d), overrideMap);
           }
         }
       }
@@ -53,7 +57,7 @@ export function createCalendarEvents(
     /** ======================
      * DAY_CYCLE（平日基準）
      * ====================== */
-    if (t.cycleType === "DAY_CYCLE") {
+    if (t.cycleType === 'DAY_CYCLE') {
       const cycleLength = t.onDays + t.offDays;
       let workIndex = 0;
 
@@ -62,7 +66,7 @@ export function createCalendarEvents(
 
         const isWorkDay = workIndex % cycleLength < t.onDays;
         if (isWorkDay) {
-          pushEvent(events, t, formatDate(d), overrideMap);
+          pushEvent(events, t, formatDateLocal(d), overrideMap);
         }
         workIndex++;
       }
@@ -72,9 +76,7 @@ export function createCalendarEvents(
   return events;
 }
 
-/** ======================
- * event生成（override反映）
- * ====================== */
+/** event生成（override反映）*/
 function pushEvent(
   events: CalendarEvent[],
   trigger: Trigger,
@@ -84,12 +86,18 @@ function pushEvent(
   const override = overrideMap.get(`${trigger.id}_${date}`);
 
   const workType = override?.workType ?? trigger.workType;
-  const backgroundColor = workType === "在宅" ? "#fca96d" : "#6ba4ff";
+  const isRemote = workType === '在宅';
+
+  const backgroundColor = isRemote ? '#ffc194' : '#8db9ff';
+  const borderColor = isRemote ? '#f97316' : '#3b82f6';
+
+  const title = isRemote ? `🏠 ${trigger.name}` : `🏢 ${trigger.name}`;
 
   events.push({
-    title: trigger.name,
+    title,
     date,
     backgroundColor,
+    borderColor,
     triggerId: trigger.id,
     workType,
   });
@@ -101,12 +109,9 @@ function isWeekday(date: Date): boolean {
   return d >= 1 && d <= 5;
 }
 
-function formatDate(date: Date): string {
-  return date.toISOString().slice(0, 10);
-}
-
-function addDays(date: Date, days: number): Date {
-  const d = new Date(date);
-  d.setDate(d.getDate() + days);
-  return d;
+function formatDateLocal(date: Date): string {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
 }

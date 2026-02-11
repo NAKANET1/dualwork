@@ -1,4 +1,3 @@
-// types/override.ts
 export type ScheduleOverride = {
   id?: string;
   triggerId: string;
