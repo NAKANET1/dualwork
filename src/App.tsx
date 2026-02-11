@@ -1,15 +1,15 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import Member from "./pages/Member";
-import MemberReg from "./pages/MemberReg";
-import MemberEdit from "./pages/MemberEdit";
-import Schedule from "./pages/Schedule";
-import ScheduleReg from "./pages/ScheduleReg";
-import ScheduleEdit from "./pages/ScheduleEdit";
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import Member from './pages/Member';
+import MemberReg from './pages/MemberReg';
+import MemberEdit from './pages/MemberEdit';
+import Schedule from './pages/Schedule';
+import ScheduleReg from './pages/ScheduleReg';
+import ScheduleEdit from './pages/ScheduleEdit';
 
 function App() {
   return (
-    <Router>
+    <Router basename="/dualwork">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/member" element={<Member />} />
@@ -22,5 +22,6 @@ function App() {
     </Router>
   );
 }
+
 
 export default App;
