@@ -1,4 +1,4 @@
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Member from './pages/Member';
 import MemberReg from './pages/MemberReg';
@@ -22,6 +22,5 @@ function App() {
     </Router>
   );
 }
-
 
 export default App;
