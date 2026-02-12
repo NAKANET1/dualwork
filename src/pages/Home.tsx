@@ -67,12 +67,12 @@ function Home() {
       rightButtons={
         <>
           <Button
-            icon={<img src="PeopleIcon.png" alt="icon" />}
+            icon={<img src="/PeopleIcon.png" alt="icon" />}
             label="メンバー"
             onClick={() => navigate('/member')}
           />
           <Button
-            icon={<img src="CalendarIcon.png" alt="icon" />}
+            icon={<img src="/CalendarIcon.png" alt="icon" />}
             label="スケジュール"
             onClick={() => navigate('/schedule')}
           />
