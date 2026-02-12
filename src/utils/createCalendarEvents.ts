@@ -10,7 +10,7 @@ export function createCalendarEvents(
 ): CalendarEvent[] {
   const events: CalendarEvent[] = [];
 
-  /** override 検索用Map */
+  // override 検索用Map
   const overrideMap = new Map<string, ScheduleOverride>();
   overrides.forEach((o) => {
     overrideMap.set(`${o.triggerId}_${o.date}`, o);
@@ -19,17 +19,15 @@ export function createCalendarEvents(
   triggers.forEach((t) => {
     if (!t.enabled) return;
 
-    /** 開始日 */
+    // 開始日
     const start = new Date(t.startDate);
 
-    /** 無期限なら表示範囲まで */
+    // 無期限なら表示範囲まで
     const end = t.endDate ? new Date(t.endDate) : new Date(viewEnd);
 
-    /** ======================
-     * CALENDAR
-     * ====================== */
+    // カレンダー
     if (t.cycleType === 'CALENDAR') {
-      /** 単発 */
+      // 単発
       if (t.repeatType === '1回') {
         if (isWeekday(start)) {
           pushEvent(events, t, formatDateLocal(start), overrideMap);
@@ -54,9 +52,7 @@ export function createCalendarEvents(
       }
     }
 
-    /** ======================
-     * DAY_CYCLE（平日基準）
-     * ====================== */
+    // 日数パターン
     if (t.cycleType === 'DAY_CYCLE') {
       const cycleLength = t.onDays + t.offDays;
       let workIndex = 0;
