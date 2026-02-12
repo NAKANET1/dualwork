@@ -9,7 +9,7 @@ import ScheduleEdit from './pages/ScheduleEdit';
 
 function App() {
   return (
-    <Router basename="/dualwork">
+    <Router>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/member" element={<Member />} />
