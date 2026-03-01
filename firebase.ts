@@ -20,4 +20,5 @@ signInAnonymously(auth)
   .then(() => {
     console.log('ログイン成功');
   })
+
   .catch(console.error);
